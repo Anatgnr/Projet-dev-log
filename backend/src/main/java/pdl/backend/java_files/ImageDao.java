@@ -31,7 +31,7 @@ public class ImageDao implements Dao<Image> {
 
   @Override
   public Optional<Image> retrieve(final long id) {
-    return Optional.of(images.get(id));
+    return Optional.ofNullable(images.get(id));
   }
 
   @Override

@@ -1,15 +1,14 @@
 package pdl.backend.java_files;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
 import java.util.List;
 import java.util.Optional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
 //import org.springframework.core.io.ClassPathResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,43 +39,43 @@ public class ImageController {
   }
 
   @RequestMapping(value = "/images/{id}", method = RequestMethod.GET, produces = MediaType.IMAGE_JPEG_VALUE)
-  public ResponseEntity<byte[]> getImage(@PathVariable("id") long id) throws IOException {
+  public ResponseEntity<?> getImage(@PathVariable("id") long id) throws IOException {
     // TODO
 
-    Image test= imageDao.retrieve(id).get();
-    byte [] tab = test.getData();
-
+    Optional<Image> test = imageDao.retrieve(id);
+    if (!test.isPresent())
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    InputStream tab = new ByteArrayInputStream(test.get().getData());
     return ResponseEntity
-            .ok()
-            .contentType(MediaType.IMAGE_JPEG)
-            .body(tab);
+        .ok()
+        .contentType(MediaType.IMAGE_JPEG)
+        .body(new InputStreamResource(tab));
   }
 
   @RequestMapping(value = "/images/{id}", method = RequestMethod.DELETE)
   public ResponseEntity<?> deleteImage(@PathVariable("id") long id) {
     // TODO
     Optional<Image> img = imageDao.retrieve(id);
-    if(img.isPresent()) {
+    if (img.isPresent()) {
       imageDao.delete(img.get());
       return new ResponseEntity<>(HttpStatus.OK);
     }
-    return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
   }
 
   @RequestMapping(value = "/images", method = RequestMethod.POST)
   public ResponseEntity<?> addImage(@RequestParam("file") MultipartFile file,
       RedirectAttributes redirectAttributes) {
     // TODO
-    if(file.getContentType() != MediaType.IMAGE_JPEG_VALUE)
-    {
+    if (file.getContentType().equals(MediaType.IMAGE_JPEG_VALUE)) {
       Image img = null;
       try {
-        img = new Image(file.getName(), file.getBytes());
+        img = new Image(file.getOriginalFilename(), file.getBytes());
       } catch (IOException e) {
         throw new RuntimeException(e);
       }
       imageDao.create(img);
-        return new ResponseEntity<>(HttpStatus.OK);
+      return new ResponseEntity<>(HttpStatus.OK);
     }
     return new ResponseEntity<>(HttpStatus.NOT_FOUND);
   }
@@ -86,8 +85,13 @@ public class ImageController {
   public ArrayNode getImageList() {
     ArrayNode nodes = mapper.createArrayNode();
     // TODO
-    List<Image> img = imageDao.retrieveAll();
-    
+    List<Image> listeImage = imageDao.retrieveAll();
+    for (
+
+        int i = 0; i < listeImage.size(); i++) {
+      // nodes.insert((int) listeImage.get(i).getId(), listeImage.get(i).getData());
+      nodes.add(listeImage.get(i).getId() + " " + listeImage.get(i).getName());
+    }
     return nodes;
   }
 
