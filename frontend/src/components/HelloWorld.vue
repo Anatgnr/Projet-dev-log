@@ -1,9 +1,35 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import axios from 'axios'
+
+let id = 0
 
 defineProps<{ msg: string }>()
 
 const count = ref(0)
+
+// axios.get('http://localhost:5550/images').then(response => {
+//   console.timeLog(response.data)
+// })
+
+//   });
+
+new Vue({
+  el: '#app',
+  data () {
+    return {
+      info: null
+    }
+  },
+  mounted () {
+    axios
+      .get('http://localhost:5550/images')
+      .then(response => (this.info = response))
+      .catch(error => console.log(error))
+  }
+})
+
+
 </script>
 
 <template>
@@ -19,9 +45,8 @@ const count = ref(0)
 
   <p>
     Check out
-    <a href="https://vuejs.org/guide/quick-start.html#local" target="_blank"
-      >create-vue</a
-    >, the official Vue + Vite starter
+    <a href="https://vuejs.org/guide/quick-start.html#local" target="_blank">create-vue</a>, the official Vue + Vite
+    starter
   </p>
   <p>
     Install

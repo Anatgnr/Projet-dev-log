@@ -86,9 +86,7 @@ public class ImageController {
     ArrayNode nodes = mapper.createArrayNode();
     // TODO
     List<Image> listeImage = imageDao.retrieveAll();
-    for (
-
-        int i = 0; i < listeImage.size(); i++) {
+    for (int i = 0; i < listeImage.size(); i++) {
       // nodes.insert((int) listeImage.get(i).getId(), listeImage.get(i).getData());
       nodes.add(listeImage.get(i).getId() + " " + listeImage.get(i).getName());
     }
