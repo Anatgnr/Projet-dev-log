@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 
 //import org.springframework.core.io.ClassPathResource;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpStatus;
@@ -88,7 +89,10 @@ public class ImageController {
     List<Image> listeImage = imageDao.retrieveAll();
     for (int i = 0; i < listeImage.size(); i++) {
       // nodes.insert((int) listeImage.get(i).getId(), listeImage.get(i).getData());
-      nodes.add(listeImage.get(i).getId() + " " + listeImage.get(i).getName());
+      ObjectNode node = mapper.createObjectNode();
+      node.put("name",listeImage.get(i).getName());
+      node.put("id",listeImage.get(i).getId());
+      nodes.add(node);
     }
     return nodes;
   }
