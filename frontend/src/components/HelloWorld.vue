@@ -1,28 +1,36 @@
 <script setup lang="ts">
-import { print, call, fct, ListImage, IdImage, count } from './http-api'
+import {print, ListImage, count, get, imageDataUrl} from './http-api'
+import { ref } from 'vue'
 
 defineProps<{ msg: "hallp" }>()
 
+onload = () => {
+  get()
+}
+
+let id = ref(0)
+
 </script>
 
-<template>
+<template onload="get()">
   <h1>{{ msg }}</h1>
-
   <div class="card">
     <button type="button" @click="count++">count is {{ count }}</button>
     <p>
       Edit
       <code>components/HelloWorld.vue</code> to test HMR
     </p>
+    <button @click="get()">Update List</button>
+
   </div>
-  <select v-model="IdImage" @change="fct(); call()">
+  <select v-model="id" @change="print(id)">
     <option v-for="image in ListImage" v-bind:value="{ id: image.id }">
       {{ image.name }}
     </option> >
   </select>
-  <br><br><br>
+  <br>
   <div class="div_img">
-    <img id="img">
+    <img id="img" :src="imageDataUrl">
   </div>
 
 
@@ -33,9 +41,13 @@ defineProps<{ msg: "hallp" }>()
   color: #888;
 }
 
+button{
+  color:greenyellow;
+  filter:drop-shadow(3px 3px 1px white);
+}
+
 #img {
   justify-content: center;
   max-height: 500px;
-  display: flex;
 }
 </style>

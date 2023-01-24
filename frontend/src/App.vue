@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import HelloWorld from './components/HelloWorld.vue'
+
+import galery from './components/galery.vue'
 </script>
 
 <template>
@@ -12,6 +14,8 @@ import HelloWorld from './components/HelloWorld.vue'
     </a>
   </div>
   <HelloWorld msg="Vite + Vue" />
+  <br>
+  <galery />
 </template>
 
 <style scoped>
