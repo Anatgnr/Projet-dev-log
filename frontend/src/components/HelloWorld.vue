@@ -13,13 +13,13 @@ let id = ref(0)
 </script>
 
 <template onload="get()">
-  <h1>{{ msg }}</h1>
+  <h1>IMAGE CENTER</h1>
   <div class="card">
     <button type="button" @click="count++">count is {{ count }}</button>
-    <p>
+    <!-- <p>
       Edit
       <code>components/HelloWorld.vue</code> to test HMR
-    </p>
+    </p> -->
     <button @click="get()">Update List</button>
 
   </div>
@@ -40,10 +40,14 @@ let id = ref(0)
 .read-the-docs {
   color: #888;
 }
-
 button{
+  color: greenyellow;
+  margin:10px;
+}
+
+button:hover{
   color:greenyellow;
-  filter:drop-shadow(3px 3px 1px white);
+  filter:drop-shadow(4px 4px 1px rgba(172, 255, 47, 0.399));
 }
 
 #img {

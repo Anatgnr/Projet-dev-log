@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import {print, ListImage, count, get, imageDataUrl} from './http-api'
 
-for(let i = 0; i < ListImage.length; i++){
-    let name = listImage[i].name
-    let id = listImage[i].id
-}
+// for(let i = 0; i < ListImage.length; i++){
+//     let name = listImage[i].name
+//     let id = listImage[i].id
+// }
 const path = "/images/"
 </script>
 
@@ -21,12 +21,17 @@ h1{
     font-size: 30px;
     filter:drop-shadow(3px 3px 1px white);
 }
+.div_app{
+    padding: 0;
+}
+
 img{
     max-height: 300px;
-    max-width: 300px;    
+    max-width: 300px; 
+    margin:10px;   
 }
 #expo {
-    max-width: 300px;
-    max-height: 300px;
+    max-width: 250px;
+    max-height: 250px;
 }
 </style>
