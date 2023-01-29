@@ -1,5 +1,5 @@
 <script setup lang = "ts">
-import {handleFileUpload} from "./http-api";
+import {handleFileUpload,get} from "./http-api";
 
 function GetAndUploadFile(event:any){
   let file = event.target.files[0];
@@ -14,7 +14,25 @@ function GetAndUploadFile(event:any){
         <label>File
           <input type="file" id="file" ref="file" @change="GetAndUploadFile"/>
         </label>
-          <!-- <button v-on:click="submitFile()">Submit</button> -->
+        <button @click="get()">Submit</button>
       </div>
     </div>
   </template>
+
+<style>
+label{
+  color: greenyellow;
+}
+
+button{
+  color: greenyellow;
+  background-color: #181A1B;
+}
+
+button:hover{
+  color:#181A1B;
+  background-color: greenyellow;
+  filter:drop-shadow(4px 4px 1px rgba(172, 255, 47, 0.399));
+  transform: translateY(-3px);
+}
+</style>

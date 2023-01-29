@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {print, ListImage, count, get, imageDataUrl} from './http-api'
+import {ListImage} from './http-api'
 
 // for(let i = 0; i < ListImage.length; i++){
 //     let name = listImage[i].name
@@ -10,7 +10,7 @@ const path = "/images/"
 
 <template>
 
-    <h1>C'EST UNE GALERY DE PHOTO OU QOUI LA ?</h1>
+    <h1>C'EST UNE GALERIE DE PHOTO OU QUOI LA ?</h1>
 
     <img id="expo" v-for="image in ListImage" :src="path+image.id">
 </template>

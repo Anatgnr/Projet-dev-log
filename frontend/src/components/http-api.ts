@@ -22,18 +22,17 @@ export const imageDataUrl = ref("");
 
 //print an image
 
-export let print = function (nbid : number){
+export let print = function (nbid : any){
     // console.log(nbid.id)
     // console.log(imageUrl + nbid.id)
         let imageDataUrl = (imageUrl + nbid.id);
         let imageEL = document.getElementById("img");
-        imageEL.setAttribute("src", imageDataUrl);
+        imageEL?.setAttribute("src", imageDataUrl);
 }
 
 //export to the api
 
 export function handleFileUpload(file :any ) {
-    ;
     const formData = new FormData();
     formData.append('file', file);
     console.log(formData);
@@ -53,28 +52,3 @@ export function handleFileUpload(file :any ) {
         .catch(error => { console.log(error) });
 }
 
-// export function submitFile() {
-//     const fileInput = document.getElementById('fileInput') as HTMLInputElement;
-//     const file = fileInput.files[0];
-//     HandleFileUpload(file);
-// }
-
-
-
-
-
-
-
-// export function print(nbid: number) {
-//     axios.get(imageUrl + nbid, { responseType: "blob" })
-//         .then(function (response: AxiosResponse) {
-//             const reader = new window.FileReader();
-//             reader.readAsDataURL(response.data);
-//             reader.onload = function () {
-//                 const imageDataUrl = (reader.result as string);
-//                 imageEL = document.getElementById("img");
-//                 imageEL.setAttribute("src", imageDataUrl);
-//             }
-//         })
-//         // .catch(error => { console.log(error) });
-// }
