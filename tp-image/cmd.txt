@@ -1,0 +1,3 @@
+mvn clean install
+
+mvn exec:java '-Dexec.mainClass=imageprocessing.GrayLevelProcessing' '-Dexec.args=images/beach.jpg images/generate/luminosity2.jpg'

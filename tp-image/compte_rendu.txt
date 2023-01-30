@@ -1,0 +1,1 @@
+2.2) Des pixels qui devraient être blancs de viennent noir et inversement selon notre delta, on teste pas la condition >255 ou >0 
