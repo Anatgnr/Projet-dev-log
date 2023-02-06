@@ -44,6 +44,98 @@ public class GrayLevelProcessing {
 			}
 	}
 
+	public static void dynamique(GrayU8 input){
+		int min = 255; int max = 0;
+		for (int y = 0; y < input.height; ++y) 
+            for (int x = 0; x < input.width; ++x) 
+				{
+					int gl = input.get(x, y);
+                    if(gl>max)
+                        max = gl;
+                    if(gl<min)
+                        min = gl;
+				}
+
+		for (int y = 0; y < input.height; ++y) {
+            for (int x = 0; x < input.width; ++x) {
+				int gl = input.get(x, y);
+				gl = (255/(max-min))*(gl-min);
+				if(gl>255)
+					gl = 255;
+				if(gl<0)
+                    gl = 0;
+                input.set(x, y, gl);
+            }
+        }
+	}
+
+	public static void dynamique2(GrayU8 input,int Vmax, int Vmin){
+		int Fmin = 255; int Fmax = 0;
+		int sub;
+		for (int y = 0; y < input.height; ++y) 
+            for (int x = 0; x < input.width; ++x) 
+				{
+					int gl = input.get(x, y);
+                    if(gl>Fmax)
+                        Fmax = gl;
+                    if(gl<Fmin)
+                        Fmin = gl;
+				}
+		sub = Fmax-Fmin;
+		if(Fmax == Fmin)
+			sub = 1;
+		for (int y = 0; y < input.height; ++y) {
+            for (int x = 0; x < input.width; ++x) {
+				int gl = input.get(x, y);
+				gl = (gl - Fmin)*((Vmax-Vmin)/(sub)) + Vmin;
+				if(gl>255)
+					gl = 255;
+				if(gl<0)
+                    gl = 0;
+                input.set(x, y, gl);
+            }
+        }
+	}
+
+	public static void dynamique3(GrayU8 input){
+		int Fmin = 255; int Fmax = 0;
+		for (int y = 0; y < input.height; ++y) 
+            for (int x = 0; x < input.width; ++x) 
+				{
+					int gl = input.get(x, y);
+                    if(gl>Fmax)
+                        Fmax = gl;
+                    if(gl<Fmin)
+                        Fmin = gl;
+				}
+		int[] LUT = new int[256];
+		for(int i = 0; i<256; i++)
+			LUT[i] = (255 * (i - Fmin)/(Fmax - Fmin));
+		for (int y = 0; y < input.height; ++y) 
+        	for (int x = 0; x < input.width; ++x)
+				input.set(x, y,LUT[input.get(x,y)]); 
+	}
+
+	// public static void histogram(GrayU8 input){
+	// 	//initialisation de hist
+	// 	int []hist = new int[256];
+	// 	for(int i = 0; i<256; i++)
+	// 		hist[i]=0;
+	// 	for (int y = 0; y < input.height; ++y) 
+    //         for (int x = 0; x < input.width; ++x)
+	// 		{
+	// 			int gl=input.get(x, y);
+	// 			hist[gl]++;
+	// 		}
+	// 	int cumule = 0;
+	// 	for(int i = 0; i<256; i++)
+	// 		cumule += hist[i];
+	// 	for(int i = 0; i<256; i++)
+	// 		hist[i] = (truc * 255)/(input.width * input.height);
+	// }
+
+	
+
 	public static void main(String[] args) {
 
 		// load image
@@ -61,7 +153,13 @@ public class GrayLevelProcessing {
 		// processing
 
 		// threshold(input, 128);
-		luminosity(input, 100);
+		// luminosity(input, 100);
+		// dynamique(input);
+		// dynamique3(input);
+
+		//time test
+		for(int i = 0; i<1000; i++)
+			dynamique2(input,190,10);
 
 		// save output image
 		final String outputPath = args[1];

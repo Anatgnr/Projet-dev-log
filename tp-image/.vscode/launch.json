@@ -2,10 +2,17 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Launch Convolution",
+            "request": "launch",
+            "mainClass": "imageprocessing.Convolution",
+            "projectName": "tp-image"
+        },
+        {
+            "type": "java",
             "name": "Launch GrayLevelProcessing",
             "request": "launch",
-            "mainClass": "imageprocessing.GrayLevelProcessing",
-            "args": "<inputPath> <outputPath>"
+            "mainClass": "imageprocessing.Convolution.java",
+            "args": "images/beach.jpg images/generate/time_test.jpg"
         }
     ]
 }
