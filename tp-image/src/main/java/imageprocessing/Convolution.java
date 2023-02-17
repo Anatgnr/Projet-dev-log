@@ -11,8 +11,6 @@ import boofcv.struct.image.GrayU8;
 public class Convolution {
 
   public static void meanFilterSimple(GrayU8 input, GrayU8 output, int size) {
-    // int taille = 2*size+1;
-    // int[][] K = new int[taille][taille];
     for (int y = size/2; y < input.height - size/2; ++y)
 			for (int x = size/2; x < input.width - size/2; ++x)
         {
@@ -22,12 +20,32 @@ public class Convolution {
               sum += input.get(x+i,y+j);
           output.set(x,y,sum/((size*size))); 
         }
-
-
   }
 
   public static void meanFilterWithBorders(GrayU8 input, GrayU8 output, int size, BorderType borderType) {
-    
+    for(int y = 0; y<input.height; y++)
+      for(int x = 0; x<input.width; x ++)
+      switch(borderType){
+      case NORMALIZED:
+        {
+          int sum = 0;
+          int xmin = x-size/2;
+          int xmax = x+size/2;
+          int ymin = y - size/2;
+          int ymax = y + size/2;
+          while(xmax >= input.width){xmax --;}
+          while(xmin < 0){xmin ++;}
+          while(ymin < 0){ymin ++;}
+          while(ymax >= input.height){ymax --;}
+          for(int i = ymin; i <= ymax; i++)
+            for(int j = xmin; j <= xmax; j++)
+              sum += input.get(j,i);
+          output.set(x,y,sum/((xmax - xmin +1)*(ymax - ymin +1))); 
+        }
+        break;
+      default:
+          break;
+      }
   }
   
   public static void convolution(GrayU8 input, GrayU8 output, int[][] kernel) {
@@ -46,7 +64,8 @@ public class Convolution {
 
     //processing
 
-    meanFilterSimple(input, output, 11);
+    // meanFilterSimple(input, output, 3);
+    meanFilterWithBorders(input, output, 5, BorderType.NORMALIZED);
 
     // save output image
     final String outputPath = args[1];

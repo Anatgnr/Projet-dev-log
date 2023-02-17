@@ -1,3 +1,5 @@
+TP3]
+
 2.2) Des pixels qui devraient être blancs de viennent noir et inversement selon notre delta, on teste pas la condition >255 ou >0 
                              ---------------------------------------------------
 temps total pour dynamique  |   1]: 0.800 s |   100]: 1.491 s | 1000]: 6.911 s  |
@@ -5,3 +7,7 @@ temps total pour dynamique2 |   1]: 0.847 s |   100]: 1.488 s | 1000]: 7.744 s  
 temps total pour dynamique3 |   1]: 0.946 s |   100]: 0.870 s | 1000]: 2.111 s  |
                              ---------------------------------------------------
 On voit que dynamique3 est beacoup plus rapide sur 1000 executions
+
+TP4]
+
+1) il n'y a quasiment pas de différences avec l'original, c'est dû à la densité de pixels dans l'image
