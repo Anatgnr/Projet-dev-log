@@ -8,6 +8,9 @@ import boofcv.struct.convolve.Kernel1D_S32;
 import boofcv.struct.convolve.Kernel2D_S32;
 import boofcv.struct.image.GrayU8;
 
+
+//Stones 640 * 426
+
 public class Convolution {
 
   public static void meanFilterSimple(GrayU8 input, GrayU8 output, int size) {
@@ -43,6 +46,41 @@ public class Convolution {
           output.set(x,y,sum/((xmax - xmin +1)*(ymax - ymin +1))); 
         }
         break;
+      case EXTENDED:
+      {
+        int sum = 0;
+        for(int i = -size/2; i <= size/2; i++)
+          for(int j = -size/2; j <= size/2; j++)
+          {
+            int tmpi = i;
+            int tmpj = j;
+            if(i < 0 || x + i >= input.width -1){tmpi = 0;}
+            if(j<0 || y + j >= input.height -1){tmpj = 0;}
+            sum += input.get(x + tmpi,y + tmpj);
+          }
+          output.set(x,y,sum/(size*size));
+      }
+        break;
+      case REFLECT:
+      {
+        int sum = 0;
+        for(int i = -size/2; i <= size/2; i++)
+          for(int j = -size/2; j <= size/2; j++)
+          {
+            int tmpi = i;
+            int tmpj = j;
+            if(i< 0){tmpi = (-1)*(i);}
+            if(x + i == input.width -1){tmpi = 0;}
+            if(x + i > input.width -1){tmpi = (input.width -1) - i;}
+            
+            if(j < 0){tmpj = (-1)*j;}
+            // if(y + j > input.height -1){tmpj = (-1)*(j - (input.height - 1) );}
+            System.out.println("x:" + x + " tmpi:" + tmpi);
+            sum += input.get(x + tmpi,y + tmpj);
+          }
+          output.set(x, y, sum/(size*size));
+      }
+        break;
       default:
           break;
       }
@@ -65,7 +103,7 @@ public class Convolution {
     //processing
 
     // meanFilterSimple(input, output, 3);
-    meanFilterWithBorders(input, output, 5, BorderType.NORMALIZED);
+    meanFilterWithBorders(input, output, 11, BorderType.REFLECT);
 
     // save output image
     final String outputPath = args[1];
