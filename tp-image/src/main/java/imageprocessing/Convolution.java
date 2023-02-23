@@ -69,13 +69,10 @@ public class Convolution {
           {
             int tmpi = i;
             int tmpj = j;
-            if(i< 0){tmpi = (-1)*(i);}
-            if(x + i == input.width -1){tmpi = 0;}
-            if(x + i > input.width -1){tmpi = (input.width -1) - i;}
-            
-            if(j < 0){tmpj = (-1)*j;}
-            // if(y + j > input.height -1){tmpj = (-1)*(j - (input.height - 1) );}
-            System.out.println("x:" + x + " tmpi:" + tmpi);
+            if(x + tmpi< 0){tmpi = -i;}
+            if(x + i > input.width -1){tmpi = (input.width -1) - (x+i);}
+            if(y + tmpj < 0){tmpj = -j;}
+            if(y + j > input.height -1){tmpj = (input.height - 1) - (y+j);}
             sum += input.get(x + tmpi,y + tmpj);
           }
           output.set(x, y, sum/(size*size));
@@ -87,7 +84,51 @@ public class Convolution {
   }
   
   public static void convolution(GrayU8 input, GrayU8 output, int[][] kernel) {
-    
+    int size = kernel.length;
+    int total = 0;
+    for(int i = 0; i < size; i++)
+      for(int j = 0; j<size; j++)
+        total += kernel[i][j];
+    for (int y = size/2; y < input.height - size/2; ++y)
+			for (int x = size/2; x < input.width - size/2; ++x)
+        {
+          int sum = 0;
+          for(int i = - size/2; i <= size/2; i++)
+            for(int j = - size/2; j <= size/2; j++)
+              sum += input.get(x+i,y+j)*kernel[i+(size/2)][j+(size/2)]; 
+          output.set(x,y,sum/(total)); 
+        }
+  }
+
+  public static void gradientImageSobel(GrayU8 input, GrayU8 output){
+    int fullsize = input.width * input.height;
+    int[] h1 =  new int [fullsize];
+    int[] h2 =  new int [fullsize];
+    int size = 3;
+    int[] kaiser1 = {-1, 0, 1, -2, 0, 2, -1, 0, 1};
+    int[] kaiser2 = {-1, -2, -1, 0, 0, 0, 1, 2, 1};
+    for (int y = size/2; y < input.height - size/2; ++y)
+			for (int x = size/2; x < input.width - size/2; ++x)
+        {
+          int cpt=-1;
+          int sum = 0;
+          for(int i = - size/2; i <= size/2; i++)
+            for(int j = - size/2; j <= size/2; j++)
+              sum += input.get(x+i,y+j)*kaiser1[++cpt]; 
+              h1[x+y*input.width] = sum; 
+        }   
+    for (int y = size/2; y < input.height - size/2; ++y)
+			for (int x = size/2; x < input.width - size/2; ++x)
+        {
+          int cpt=-1;
+          int sum = 0;
+          for(int i = - size/2; i <= size/2; i++)
+            for(int j = - size/2; j <= size/2; j++)
+              sum += input.get(x+i,y+j)*kaiser2[++cpt]; 
+          h2[x+y*input.width] = sum;
+        }
+    for(int i = 0; i< fullsize; i++)
+      output.set(i%input.width,i/input.width, (int) Math.sqrt((h1[i]*h1[i])+(h2[i]*h2[i])));
   }
 
   public static void main(final String[] args) {
@@ -100,10 +141,16 @@ public class Convolution {
     GrayU8 input = UtilImageIO.loadImage(inputPath, GrayU8.class);
     GrayU8 output = input.createSameShape();
 
-    //processing
+    // int[][] kaiser = {{1,2,3,2,1},{2,6,8,6,2},{3,8,10,8,3},{2,6,8,6,2},{1,2,3,2,1}};
 
+    //processing
+    
     // meanFilterSimple(input, output, 3);
-    meanFilterWithBorders(input, output, 11, BorderType.REFLECT);
+    // meanFilterWithBorders(input, output, 3, BorderType.REFLECT);
+    // convolution(input, output,kaiser);
+    // Kernel2D_S32 kernel = new Kernel2D_S32(5, new int[] { 1, 2, 3, 2, 1, 2, 6, 8, 6, 2, 3, 8, 10, 8, 3, 2, 6, 8, 6, 2, 1, 2, 3, 2, 1 });
+    // GConvolveImageOps.convolveNormalized(kernel, input, output);
+    gradientImageSobel(input, output);
 
     // save output image
     final String outputPath = args[1];
