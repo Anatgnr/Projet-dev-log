@@ -1,2 +1,4 @@
 imageprocessing/GrayLevelProcessing.class
+imageprocessing/color.class
+imageprocessing/Convolution$1.class
 imageprocessing/Convolution.class

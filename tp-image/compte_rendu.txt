@@ -11,3 +11,14 @@ On voit que dynamique3 est beacoup plus rapide sur 1000 executions
 TP4]
 
 1) il n'y a quasiment pas de différences avec l'original, c'est dû à la densité de pixels dans l'image
+
+TP5
+
+1) on change dans le main le type d'image.
+2) on test notre fonction luminosity
+3) pour convolution on applique le même principe que pour luminosity
+4) pour convertir une image en gris, on parcours chaque pixel de l'image et on multiplie chaque couleur avec son coef et on en fait la somme.
+ 
+
+
+

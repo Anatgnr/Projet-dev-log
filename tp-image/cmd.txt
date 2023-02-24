@@ -1,3 +1,5 @@
 mvn clean install
 
 mvn exec:java '-Dexec.mainClass=imageprocessing.GrayLevelProcessing' '-Dexec.args=images/beach.jpg images/generate/luminosity2.jpg'
+
+mvn exec:java '-Dexec.mainClass=imageprocessing.color' '-Dexec.args=images/colored/aube.jpg images/generate/colored/color_luminosity.jpg'
