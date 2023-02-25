@@ -72,7 +72,39 @@ public class Color {
         // System.out.println("r:"+ r + " g:" + g + " b:" + b + " max:" + max + " min: "+ min + " delta:" + delta);
         // System.out.println("r2:"+ r2 + " g2:" + g2 + " b2:" + b2);
     }
-    public static void hsvToRgb(float h, float s, float v, int[] rgb){;}
+    public static void hsvToRgb(float h, float s, float v, int[] rgb){
+        if(s > 1 && v > 1){s /= 100; v/= 100;} 
+        float c = v * s;
+        float x = c * (1 - Math.abs((h/60)%2 -1));
+        float m = v - c;
+        float[] rgb2 = {0,0,0};
+        if(h >= 0 && h < 60 ){rgb2[0] =  c; rgb2[1] =  x; rgb2[2] =  0;}
+        if(h >= 60 && h < 120 ){rgb2[0] =  x; rgb2[1] =  c; rgb2[2] =  0;}
+        if(h >= 120 && h < 180 ){rgb2[0] =  0; rgb2[1] =  c; rgb2[2] =  x;}
+        if(h >= 180 && h < 240 ){rgb2[0] =  0; rgb2[1] =  x; rgb2[2] =  0;}
+        if(h >= 240 && h < 300 ){rgb2[0] =  x; rgb2[1] =  0; rgb2[2] =  c;}
+        if(h >= 300 && h < 360 ){rgb2[0] =  c; rgb2[1] =  0; rgb2[2] =  x;}
+        for(int i = 0; i < 3; i++)
+        {
+            rgb2[i] = (rgb2[i] + m) * 255;
+        }
+        for(int i = 0; i < 3; i++)
+        {
+            rgb[i] = (int) Math.round(rgb2[i]);
+            //if we don't use Math.round it is rounding under and it is not the same result
+        }
+        // System.out.println("R =" + rgb[0] + " | " + "G =" + rgb[1] + " | " + "B =" + rgb[2]);
+        // System.out.println("R' =" + rgb2[0] + " | " + "G' =" + rgb2[1] + " | " + "B' =" + rgb2[2]);
+        // System.out.println("C =" + c);
+        // System.out.println("X =" + x);
+        // System.out.println("M =" + m);
+        // System.out.println("H =" + h + " | " + "S =" + s + " | " + "V =" + v);
+    }
+
+    public static void changeHue(Planar<GrayU8> input, Planar<GrayU8> output, int h)
+    {
+        ;
+    }
 
     public static void main(String[] args){
         if (args.length < 2) {
@@ -95,8 +127,10 @@ public class Color {
         // int[][] kaiser = {{1,2,3,2,1},{2,6,8,6,2},{3,8,10,8,3},{2,6,8,6,2},{1,2,3,2,1}};
         // color_convolution(imagein, imageout, kaiser);
         // fromColorToGray(imagein, imageout);
-        float[] hsv = {0,0,0};
-        rgbToHsv(200, 30, 111, hsv);
+        // float[] hsv = {0,0,0};
+        // rgbToHsv(200, 30, 111, hsv);
+        // int[] rgb = {0,0,0};
+        // hsvToRgb(290, 47, 30, rgb);
 
         final String outputPath = args[1];
         UtilImageIO.saveImage(imageout, outputPath);
