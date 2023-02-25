@@ -43,12 +43,12 @@ public class Color {
     }
 
     static void rgbToHsv(int r, int g, int b, float[] hsv){
-        int[] tab = {r,g,b};
-        float max = 0;
-        float min = 255;
-        float r2 = r/255;
-        float g2 = g/255;
-        float b2 = b/255;
+        double max = 0;
+        double min = 255;
+        double r2 = (double) r/255;
+        double g2 = (double) g/255;
+        double b2 = (double) b/255;
+        double[] tab = {r2,g2,b2};
 
         for(int i = 0; i < 3; i++)
         {
@@ -56,19 +56,21 @@ public class Color {
             if(tab[i] < min){min = tab[i];}
         }
 
-        float delta = max - min;
+        double delta = max - min;
 
         if(max == min){hsv[0] = 0;}
-        if(max == r2){hsv[0] = ((60 * ((float) 3.14/180)) * (g2-b2)/(delta) % (360 * ((float) 3.14/180)));}
-        if(max == g2){hsv[0] = (60* (b2-r2)/(delta)) + 2;}
-        if(max == b2){hsv[0] = (60* (r2-g2)/(delta)) + 4;}
+        if(max == r2){hsv[0] = (float) (60 * (g2-b2)/(delta) +360) % 360;}
+        if(max == g2){hsv[0] = (float) (60* (b2-r2)/(delta) + 120) % 360;}
+        if(max == b2){hsv[0] = (float) (60* (r2-g2)/(delta) + 240) % 360;}
 
         if(max == 0){hsv[1] = 0;}
-        if(max != 0){hsv[1] = delta/max;}
+        if(max != 0){hsv[1] = (float) (delta/max) * 100;}
 
-        hsv[2] = max;
+        hsv[2] = (float) max * 100;
 
         for(int i = 0; i < 3; i++){System.out.println(hsv[i]);}
+        // System.out.println("r:"+ r + " g:" + g + " b:" + b + " max:" + max + " min: "+ min + " delta:" + delta);
+        // System.out.println("r2:"+ r2 + " g2:" + g2 + " b2:" + b2);
     }
     public static void hsvToRgb(float h, float s, float v, int[] rgb){;}
 
