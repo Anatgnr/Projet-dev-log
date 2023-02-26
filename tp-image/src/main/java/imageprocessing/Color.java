@@ -68,12 +68,13 @@ public class Color {
 
         hsv[2] = (float) max * 100;
 
-        for(int i = 0; i < 3; i++){System.out.println(hsv[i]);}
+        // for(int i = 0; i < 3; i++){System.out.println(hsv[i]);}
         // System.out.println("r:"+ r + " g:" + g + " b:" + b + " max:" + max + " min: "+ min + " delta:" + delta);
         // System.out.println("r2:"+ r2 + " g2:" + g2 + " b2:" + b2);
     }
     public static void hsvToRgb(float h, float s, float v, int[] rgb){
-        if(s > 1 && v > 1){s /= 100; v/= 100;} 
+        s /= 100; 
+        v/= 100;
         float c = v * s;
         float x = c * (1 - Math.abs((h/60)%2 -1));
         float m = v - c;
@@ -103,7 +104,19 @@ public class Color {
 
     public static void changeHue(Planar<GrayU8> input, Planar<GrayU8> output, int h)
     {
-        ;
+        int[] rgb = new int[3];
+        float[] hsv = new float[3];
+        for (int y = 0; y < input.height; y++)
+            for (int x = 0; x < input.width; x ++)
+            {
+                for (int i = 0; i < input.getNumBands(); ++i)
+                    rgb[i] = input.getBand(i).get(x, y);
+                rgbToHsv(rgb[0], rgb[1], rgb[2], hsv);
+                hsv[0] = h;
+                hsvToRgb(hsv[0], hsv[1], hsv[2], rgb);
+                for(int i = 0; i < input.getNumBands(); i++)
+                    output.getBand(i).set(x,y,rgb[i]);
+            }
     }
 
     public static void main(String[] args){
@@ -128,9 +141,10 @@ public class Color {
         // color_convolution(imagein, imageout, kaiser);
         // fromColorToGray(imagein, imageout);
         // float[] hsv = {0,0,0};
-        // rgbToHsv(200, 30, 111, hsv);
+        // rgbToHsv(71, 41, 77, hsv);
         // int[] rgb = {0,0,0};
-        // hsvToRgb(290, 47, 30, rgb);
+        // hsvToRgb(290, 0.47f, 0.30f, rgb);
+        changeHue(imagein, imageout, 270);
 
         final String outputPath = args[1];
         UtilImageIO.saveImage(imageout, outputPath);

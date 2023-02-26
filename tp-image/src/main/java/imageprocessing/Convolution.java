@@ -8,7 +8,6 @@ import boofcv.struct.convolve.Kernel1D_S32;
 import boofcv.struct.convolve.Kernel2D_S32;
 import boofcv.struct.image.GrayU8;
 
-
 //Stones 640 * 426
 
 public class Convolution {
@@ -26,6 +25,7 @@ public class Convolution {
   }
 
   public static void meanFilterWithBorders(GrayU8 input, GrayU8 output, int size, BorderType borderType) {
+    if(borderType == BorderType.SKIP){meanFilterSimple(input,output,size);return;}
     for(int y = 0; y<input.height; y++)
       for(int x = 0; x<input.width; x ++)
       switch(borderType){
@@ -141,16 +141,26 @@ public class Convolution {
     GrayU8 input = UtilImageIO.loadImage(inputPath, GrayU8.class);
     GrayU8 output = input.createSameShape();
 
-    // int[][] kaiser = {{1,2,3,2,1},{2,6,8,6,2},{3,8,10,8,3},{2,6,8,6,2},{1,2,3,2,1}};
+    int[][] kaiser = {{1,2,3,2,1},{2,6,8,6,2},{3,8,10,8,3},{2,6,8,6,2},{1,2,3,2,1}};
+    // int[] kaiser2 = {1,2,3,2,1,2,6,8,6,2,3,8,10,8,3,2,6,8,6,2,1,2,3,2,1};
+    // Kernel2D_S32 kernel = new Kernel2D_S32 (5,kaiser2);
+    Kernel2D_S32 kernel = new Kernel2D_S32(5, new int[] { 1, 2, 3, 2, 1, 2, 6, 8, 6, 2, 3, 8, 10, 8, 3, 2, 6, 8, 6, 2, 1, 2, 3, 2, 1 });
 
     //processing
-    
-    // meanFilterSimple(input, output, 3);
-    // meanFilterWithBorders(input, output, 3, BorderType.REFLECT);
-    // convolution(input, output,kaiser);
+
+    // meanFilterWithBorders(input, output, 11, BorderType.EXTENDED); 
+    // meanFilterSimple(input, output, 9);
+    // GConvolveImageOps.convolveNormalized(kernel, input, output); 
+    long begin = System.nanoTime();
+    for(int i = 0; i < 1000; i++)
+      convolution(input, output, kaiser);
+		long end = System.nanoTime();
+		long duration = (end - begin);
+    System.out.println( "Temps d'éxécution :" + duration / 1e9 );
+
+
     // Kernel2D_S32 kernel = new Kernel2D_S32(5, new int[] { 1, 2, 3, 2, 1, 2, 6, 8, 6, 2, 3, 8, 10, 8, 3, 2, 6, 8, 6, 2, 1, 2, 3, 2, 1 });
-    // GConvolveImageOps.convolveNormalized(kernel, input, output);
-    gradientImageSobel(input, output);
+    // gradientImageSobel(input, output);
 
     // save output image
     final String outputPath = args[1];

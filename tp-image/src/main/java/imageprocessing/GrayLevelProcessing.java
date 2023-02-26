@@ -116,23 +116,23 @@ public class GrayLevelProcessing {
 				input.set(x, y,LUT[input.get(x,y)]); 
 	}
 
-	// public static void histogram(GrayU8 input){
-	// 	//initialisation de hist
-	// 	int []hist = new int[256];
-	// 	for(int i = 0; i<256; i++)
-	// 		hist[i]=0;
-	// 	for (int y = 0; y < input.height; ++y) 
-    //         for (int x = 0; x < input.width; ++x)
-	// 		{
-	// 			int gl=input.get(x, y);
-	// 			hist[gl]++;
-	// 		}
-	// 	int cumule = 0;
-	// 	for(int i = 0; i<256; i++)
-	// 		cumule += hist[i];
-	// 	for(int i = 0; i<256; i++)
-	// 		hist[i] = (truc * 255)/(input.width * input.height);
-	// }
+	public static void histogram(GrayU8 input){
+		//initialisation de hist
+		int []hist = new int[256];
+		for(int i = 0; i<256; i++)
+			hist[i]=0;
+		for (int y = 0; y < input.height; ++y) 
+			for (int x = 0; x < input.width; ++x)
+			{
+				int gl=input.get(x, y);
+				hist[gl]++;
+			}
+		int cumule = 0;
+		for(int i = 0; i<256; i++)
+			cumule += hist[i];
+		for(int i = 0; i<256; i++)
+			hist[i] = (truc * 255)/(input.width * input.height);
+	}
 
 	
 
@@ -158,8 +158,14 @@ public class GrayLevelProcessing {
 		// dynamique3(input);
 
 		//time test
+		long begin = System.nanoTime();
 		for(int i = 0; i<1000; i++)
-			dynamique2(input,190,10);
+			dynamique3(input);
+		long end = System.nanoTime();
+		long duration = (end - begin);
+
+		System.out.println( "Temps d'éxécution :" + duration / 1e9 );
+		System.out.println( "Temps d'éxécution moyen :" + (duration / 1e9)/1000 );
 
 		// save output image
 		final String outputPath = args[1];
