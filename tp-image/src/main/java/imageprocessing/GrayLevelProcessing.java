@@ -87,7 +87,7 @@ public class GrayLevelProcessing {
 		for (int y = 0; y < input.height; ++y) {
             for (int x = 0; x < input.width; ++x) {
 				int gl = input.get(x, y);
-				gl = (gl - Fmin)*((Vmax-Vmin)/(sub)) + Vmin;
+				gl = (gl - Fmin)*((Vmax-Vmin)/(sub)) + Vmin; //tester enlever parenthèse de division
 				if(gl>255)
 					gl = 255;
 				if(gl<0)
@@ -143,7 +143,7 @@ public class GrayLevelProcessing {
 		return histc;
 	}
 
-	public static void apllyhist(GrayU8 input)
+	public static void apllyhistogram(GrayU8 input)
 	{
 		int[] hist = histogram(input);
 		int[] histc = histogramcumule(hist);
@@ -180,7 +180,7 @@ public class GrayLevelProcessing {
 		//time test
 		long begin = System.nanoTime();
 		for(int i = 0; i<1; i++)
-			histogram(input);
+			apllyhistogram(input);
 		long end = System.nanoTime();
 		long duration = (end - begin);
 

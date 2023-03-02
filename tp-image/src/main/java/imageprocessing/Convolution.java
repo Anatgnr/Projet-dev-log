@@ -1,5 +1,6 @@
 package imageprocessing;
 
+import boofcv.abst.filter.derivative.ImageGradient_SB.Sobel;
 import boofcv.alg.filter.blur.GBlurImageOps;
 import boofcv.alg.filter.convolve.GConvolveImageOps;
 import boofcv.io.image.UtilImageIO;
@@ -151,9 +152,10 @@ public class Convolution {
     // meanFilterWithBorders(input, output, 11, BorderType.EXTENDED); 
     // meanFilterSimple(input, output, 9);
     // GConvolveImageOps.convolveNormalized(kernel, input, output); 
+    // convolution(input, output, kaiser);
     long begin = System.nanoTime();
     for(int i = 0; i < 1000; i++)
-      convolution(input, output, kaiser);
+      gradientImageSobel(input, output);
 		long end = System.nanoTime();
 		long duration = (end - begin);
     System.out.println( "Temps d'éxécution :" + duration / 1e9 );

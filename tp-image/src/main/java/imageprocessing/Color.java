@@ -119,6 +119,70 @@ public class Color {
             }
     }
 
+    public static void colordyn(Planar<GrayU8> input, Planar<GrayU8> output){
+        fromColorToGray(input, output);
+        int[] hist = GrayLevelProcessing.histogram(input.getBand(0));
+        int[] histc = GrayLevelProcessing.histogramcumule(hist);
+        for (int i = 0; i < input.getNumBands(); ++i)
+            {
+                for (int y = 0; y < input.height; ++y) 
+                    for (int x = 0; x < input.width; ++x)
+                    {
+                        int gl = input.getBand(i).get(x, y);
+                        output.getBand(i).set(x, y, histc[gl]*255/(input.height*input.width));
+                    }
+            }
+            
+    }
+
+    public static int[][] vHistogram(Planar<GrayU8> input)
+    {
+        int[] rgb = new int[3];
+        int[][] hist = new int[3][256];
+		for (int y = 0; y < input.height; ++y) 
+			for (int x = 0; x < input.width; ++x)
+			{
+                for(int i = 0; i < input.getNumBands(); i ++)
+                {
+                    rgb[i]=input.getBand(i).get(x, y);
+                    hist[i][rgb[i]]++;
+                }
+			}
+		return hist;
+    }
+
+    public static int[][] vHistogramc(int[][] hist)
+    {
+        int[][] histc = new int[3][256];
+        for(int i = 0; i < 3; i++)
+        {
+            histc[i][0] = hist[i][0];
+            for(int j = 1; j < 256; j++)
+            {
+                histc[i][j] = histc[i][j-1] + hist[i][j];
+            }
+        }
+        return histc;
+    }
+
+    public static void colorcontrast(Planar<GrayU8> input, Planar<GrayU8> output){
+        int[] rgb = new int[3];
+        float[] hsv = new float[3];
+        int[][] histc = vHistogramc(vHistogram(input));
+        for(int x = 0; x < input.width; x++)
+            for(int y = 0; y < input.height; y++)
+            {
+                for(int b = 0; b < input.getNumBands(); b++)
+                    rgb[b] = histc[b][rgb[b]]*255/(input.height*input.width);
+                rgbToHsv(rgb[0], rgb[1], rgb[2], hsv);
+                hsv[2] = hsv[2]*255/100;
+                hsvToRgb(hsv[0], hsv[1], hsv[2], rgb);
+                for(int i = 0; i < input.getNumBands(); i++)
+                    output.getBand(i).set(x,y,rgb[i]);
+            }
+    }
+
+
     public static void main(String[] args){
         if (args.length < 2) {
             System.out.println("missing input or output image filename");
@@ -144,7 +208,9 @@ public class Color {
         // rgbToHsv(71, 41, 77, hsv);
         // int[] rgb = {0,0,0};
         // hsvToRgb(290, 0.47f, 0.30f, rgb);
-        changeHue(imagein, imageout, 270);
+        // changeHue(imagein, imageout, 70);
+        colorcontrast(imagein, imageout);
+
 
         final String outputPath = args[1];
         UtilImageIO.saveImage(imageout, outputPath);
